@@ -29,10 +29,10 @@ export default function Hero() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/images/stage.jpg')" }}
       />
-      {/* Overlay principal — fort à gauche, s'efface vers la droite */}
-      <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/80 to-navy/40" />
-      {/* Overlay bas — transition douce vers la section suivante */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-navy/60 to-transparent" />
+      {/* Overlay principal — allégé pour laisser respirer l'image */}
+      <div className="absolute inset-0 bg-gradient-to-r from-navy/80 via-navy/55 to-navy/15" />
+      {/* Overlay bas — transition douce */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-navy/40 to-transparent" />
 
       {/* ── Contenu principal ── */}
       <div className="relative z-10 flex-1 flex items-center">
