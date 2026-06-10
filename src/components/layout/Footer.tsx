@@ -37,7 +37,7 @@ export default function Footer() {
                   src="/images/logo.png"
                   alt="AssureEver logo"
                   fill
-                  className="object-contain brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                  className="object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-200 drop-shadow-sm"
                 />
               </div>
               <div className="flex flex-col leading-none">
@@ -98,7 +98,7 @@ export default function Footer() {
                 src="/images/logo.png"
                 alt=""
                 fill
-                className="object-contain brightness-0 invert"
+                className="object-contain opacity-70"
               />
             </div>
             <p className="text-white/35 text-sm">
