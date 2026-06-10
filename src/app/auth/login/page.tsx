@@ -1,12 +1,35 @@
+"use client";
+
+import { useState, FormEvent } from "react";
 import Link from "next/link";
-import { Shield, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { Shield, ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [showPwd,  setShowPwd]  = useState(false);
+  const [error,    setError]    = useState("");
+  const [loading,  setLoading]  = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const res = await signIn("credentials", { email, password, redirect: false });
+    setLoading(false);
+    if (res?.ok) {
+      router.push("/dashboard");
+    } else {
+      setError("Identifiants incorrects. Vérifiez votre email et mot de passe.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-
-        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6 text-text-muted hover:text-primary transition-colors text-sm">
             <ArrowLeft className="w-4 h-4" />
@@ -23,46 +46,38 @@ export default function LoginPage() {
           <p className="text-text-muted text-sm">Votre santé, notre engagement</p>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-card border border-gray-100 p-8">
           <h1 className="text-xl font-bold text-navy mb-1">Connexion</h1>
           <p className="text-text-muted text-sm mb-7">Accédez à votre espace de gestion</p>
 
-          <form className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-navy mb-1.5">
-                Adresse email
-              </label>
-              <input
-                type="email"
-                placeholder="votre@email.com"
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-navy placeholder-gray-400
-                           focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-              />
+          {error && (
+            <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+              {error}
             </div>
+          )}
 
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-navy mb-1.5">
-                Mot de passe
-              </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-navy placeholder-gray-400
-                           focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-              />
-              <div className="text-right mt-2">
-                <a href="#" className="text-xs text-primary hover:text-primary-light transition-colors">
-                  Mot de passe oublié ?
-                </a>
+              <label className="block text-sm font-medium text-navy mb-1.5">Adresse email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                placeholder="votre@email.com"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-navy placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-navy mb-1.5">Mot de passe</label>
+              <div className="relative">
+                <input type={showPwd ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required
+                  placeholder="••••••••"
+                  className="w-full px-4 py-2.5 pr-10 border border-gray-200 rounded-xl text-sm text-navy placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+                <button type="button" onClick={() => setShowPwd(!showPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-primary transition-colors">
+                  {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
-
-            <button
-              type="submit"
-              className="btn-primary w-full justify-center text-sm py-3"
-            >
-              Se connecter
+            <button type="submit" disabled={loading}
+              className="btn-primary w-full justify-center text-sm py-3 disabled:opacity-60">
+              {loading ? "Connexion…" : "Se connecter"}
             </button>
           </form>
 
