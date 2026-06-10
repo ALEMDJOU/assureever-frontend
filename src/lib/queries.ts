@@ -8,6 +8,23 @@ import type {
   TypeMedecin,
 } from "@/types/api";
 
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  user: { id: string; nom: string; prenom: string; email: string; role: string };
+}
+
+export const authApi = {
+  login: (email: string, password: string) =>
+    api.post<TokenResponse>("/auth/login", { email, password }),
+
+  register: (data: {
+    nom: string; prenom: string; email: string; password: string;
+  }) => api.post<TokenResponse>("/auth/register", data),
+};
+
 // ─── Assurés ──────────────────────────────────────────────────────────────────
 
 export const assuresApi = {
