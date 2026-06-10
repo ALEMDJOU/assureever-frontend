@@ -81,7 +81,14 @@ export default function Navbar() {
               className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-primary transition-colors px-3 py-2"
             >
               <LogIn className="w-4 h-4" />
-              Se connecter
+              Espace médecin
+            </Link>
+            <Link
+              href="/auth/assureur"
+              className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-primary transition-colors px-3 py-2"
+            >
+              <LogIn className="w-4 h-4" />
+              Espace assureur
             </Link>
             <Link
               href="/auth/register"
@@ -116,12 +123,9 @@ export default function Navbar() {
               </a>
             ))}
             <div className="pt-3 flex flex-col gap-2 px-4">
-              <Link href="/auth/login" className="btn-outline text-sm justify-center">
-                Se connecter
-              </Link>
-              <Link href="/auth/register" className="btn-primary text-sm justify-center">
-                Demander un accès
-              </Link>
+              <Link href="/auth/login"    className="btn-outline text-sm justify-center">Espace médecin</Link>
+              <Link href="/auth/assureur" className="btn-outline text-sm justify-center">Espace assureur</Link>
+              <Link href="/auth/register" className="btn-primary text-sm justify-center">Demander un accès</Link>
             </div>
           </div>
         )}

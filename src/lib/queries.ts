@@ -17,8 +17,11 @@ export interface TokenResponse {
 }
 
 export const authApi = {
-  login: (email: string, password: string) =>
-    api.post<TokenResponse>("/auth/login", { email, password }),
+  loginMedecin: (email: string, password: string) =>
+    api.post<TokenResponse>("/auth/login/medecin", { email, password }),
+
+  loginAssureur: (email: string, password: string) =>
+    api.post<TokenResponse>("/auth/login/assureur", { email, password }),
 
   register: (data: {
     nom: string; prenom: string; email: string; password: string;
