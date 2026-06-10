@@ -2,11 +2,12 @@
 
 import { useState, ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
   LayoutDashboard, Users, Stethoscope, FileHeart,
-  ClipboardList, Banknote, Bell, Shield,
+  ClipboardList, Banknote, Bell,
   LogOut, Menu, X, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -33,13 +34,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const Sidebar = (
     <aside className="flex flex-col h-full bg-white border-r border-gray-100 w-56 shrink-0">
       {/* Logo */}
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-          <Shield className="w-4 h-4 text-white" />
-        </div>
-        <span className="font-bold text-navy text-base tracking-tight">
-          Assure<span className="text-primary">ever</span>
-        </span>
+      <div className="px-4 py-4 border-b border-gray-100">
+        <Link href="/dashboard" className="flex items-center gap-2.5 group">
+          <div className="relative w-8 h-8 shrink-0">
+            <Image
+              src="/images/logo.png"
+              alt="AssureEver"
+              fill
+              className="object-contain group-hover:scale-105 transition-transform duration-200"
+            />
+          </div>
+          <span className="font-extrabold text-navy text-base tracking-tight">
+            Assure<span className="text-primary">ever</span>
+          </span>
+        </Link>
       </div>
 
       {/* Rôle badge */}
