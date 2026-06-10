@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #0f2d4a;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-primary-light transition-all duration-200 shadow-sm hover:shadow-md
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border-2 border-primary text-primary font-semibold px-6 py-3 rounded-lg
+           hover:bg-surface transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2 text-sm font-semibold text-primary uppercase tracking-widest
+           bg-primary/10 px-4 py-1.5 rounded-full;
+  }
+
+  .feature-card {
+    @apply bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover
+           transition-all duration-300 hover:-translate-y-1 border border-gray-100/80;
+  }
+
+  .stat-badge {
+    @apply flex flex-col items-center bg-white/10 backdrop-blur-sm
+           border border-white/20 rounded-xl px-5 py-3;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+}
