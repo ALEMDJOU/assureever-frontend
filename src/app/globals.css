@@ -1,18 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
 
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -20,35 +17,43 @@
     color: #0f2d4a;
     background-color: #ffffff;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-lg
-           hover:bg-primary-light transition-all duration-200 shadow-sm hover:shadow-md
-           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+    @apply inline-flex items-center gap-2 bg-primary text-white font-semibold
+           px-6 py-3 rounded-xl
+           hover:bg-primary-light transition-all duration-200
+           shadow-sm hover:shadow-md hover:-translate-y-px
+           focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2
+           disabled:opacity-60 disabled:pointer-events-none;
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 border-2 border-primary text-primary font-semibold px-6 py-3 rounded-lg
+    @apply inline-flex items-center gap-2 border-2 border-primary text-primary font-semibold
+           px-6 py-3 rounded-xl
            hover:bg-surface transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2;
   }
 
   .section-eyebrow {
-    @apply inline-flex items-center gap-2 text-sm font-semibold text-primary uppercase tracking-widest
-           bg-primary/10 px-4 py-1.5 rounded-full;
+    @apply inline-flex items-center gap-2 text-sm font-semibold text-primary
+           uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full;
   }
 
   .feature-card {
-    @apply bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover
-           transition-all duration-300 hover:-translate-y-1 border border-gray-100/80;
+    @apply bg-white rounded-2xl p-6
+           shadow-card hover:shadow-card-hover
+           transition-all duration-300 hover:-translate-y-1
+           border border-gray-100/80;
   }
 
   .stat-badge {
-    @apply flex flex-col items-center bg-white/10 backdrop-blur-sm
-           border border-white/20 rounded-xl px-5 py-3;
+    @apply flex flex-col items-center
+           bg-white/8 backdrop-blur-md
+           border border-white/15 rounded-2xl px-6 py-3.5;
   }
 }
 
@@ -57,8 +62,16 @@
     @apply bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent;
   }
 
+  /* Animation delays pour les éléments en cascade */
+  .delay-100 { transition-delay: 100ms; }
+  .delay-200 { transition-delay: 200ms; }
+  .delay-300 { transition-delay: 300ms; }
+  .delay-400 { transition-delay: 400ms; }
+  .delay-500 { transition-delay: 500ms; }
+
   .animate-delay-100 { animation-delay: 100ms; }
   .animate-delay-200 { animation-delay: 200ms; }
   .animate-delay-300 { animation-delay: 300ms; }
   .animate-delay-400 { animation-delay: 400ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
 }
