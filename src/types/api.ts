@@ -29,6 +29,7 @@ export interface AssureCreate {
   adresse?: string;
   telephone?: string;
   email?: string;
+  preference_paiement?: "VIREMENT_BANCAIRE" | "ESPECES" | "MOBILE_MONEY";
 }
 
 export interface AssureListResponse {
