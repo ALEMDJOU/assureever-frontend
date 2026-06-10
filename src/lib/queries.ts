@@ -23,9 +23,25 @@ export const authApi = {
   loginAssureur: (email: string, password: string) =>
     api.post<TokenResponse>("/auth/login/assureur", { email, password }),
 
-  register: (data: {
+  /**
+   * Inscription assureur — passe par le Route Handler Next.js /api/auth/register
+   * qui proxie vers FastAPI côté serveur, évitant le blocage CORS du navigateur.
+   */
+  register: async (data: {
     nom: string; prenom: string; email: string; password: string;
-  }) => api.post<TokenResponse>("/auth/register", data),
+  }): Promise<TokenResponse> => {
+    const res = await fetch("/api/auth/register", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      const { ApiException } = await import("./api");
+      throw new ApiException(res.status, json.detail ?? "Erreur lors de l'inscription", json.erreurs);
+    }
+    return json as TokenResponse;
+  },
 };
 
 // ─── Assurés ──────────────────────────────────────────────────────────────────

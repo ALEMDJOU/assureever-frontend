@@ -70,7 +70,7 @@ export default function Hero() {
               className={`flex flex-wrap gap-3 mb-14 transition-all duration-700 delay-300 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
             >
               <Link
-                href="/auth/register"
+                href="/auth/assureur"
                 className="inline-flex items-center gap-2 bg-primary text-white font-semibold text-[15px] px-7 py-3.5 rounded-xl hover:bg-primary-light transition-all duration-200 shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-0.5"
               >
                 Découvrir AssureEver

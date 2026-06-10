@@ -142,7 +142,7 @@ export default function Navbar() {
 
             {/* CTA */}
             <Link
-              href="/auth/register"
+              href="/auth/assureur"
               className="inline-flex items-center gap-2 bg-primary text-white text-[13px] font-semibold px-4 py-2.5 rounded-xl hover:bg-primary-light transition-all duration-200 shadow-sm hover:shadow-md"
             >
               Demander un accès
@@ -194,7 +194,7 @@ export default function Navbar() {
                 </div>
                 <span className="text-sm font-semibold text-navy">Espace assureur</span>
               </Link>
-              <Link href="/auth/register" onClick={() => setOpen(false)}
+              <Link href="/auth/assureur" onClick={() => setOpen(false)}
                 className="flex items-center justify-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-primary-light transition-colors">
                 Demander un accès
               </Link>

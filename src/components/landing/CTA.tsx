@@ -24,7 +24,7 @@ export default function CTA() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
-                href="/auth/register"
+                href="/auth/assureur"
                 className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-primary-light transition-colors shadow-lg shadow-primary/30"
               >
                 <UserPlus className="w-5 h-5" />
