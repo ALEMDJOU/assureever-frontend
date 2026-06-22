@@ -37,6 +37,7 @@ export default function Footer() {
                   src="/images/logo.png"
                   alt="AssureEver logo"
                   fill
+                  sizes="44px"
                   className="object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-200 drop-shadow-sm"
                 />
               </div>
@@ -98,6 +99,7 @@ export default function Footer() {
                 src="/images/logo.png"
                 alt=""
                 fill
+                sizes="20px"
                 className="object-contain opacity-70"
               />
             </div>

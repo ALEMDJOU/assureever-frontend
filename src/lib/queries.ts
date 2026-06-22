@@ -2,6 +2,7 @@ import { api } from "./api";
 import type {
   Assure, AssureCreate, AssureListResponse,
   Medecin, MedecinCreate, MedecinListResponse,
+  Consultation, ConsultationCreate, ConsultationListResponse,
   FeuilleMaladie, FeuilleMaladieCreate,
   PrescriptionMedicamentCreate, PrescriptionConsultationCreate,
   Remboursement, RemboursementCreate, RemboursementListResponse,
@@ -84,6 +85,21 @@ export const medecinsApi = {
     api.delete<{ message: string }>(`/medecins/${id}`, token),
 };
 
+// ─── Consultations ────────────────────────────────────────────────────────────
+
+export const consultationsApi = {
+  creer: (token: string, data: ConsultationCreate) =>
+    api.post<Consultation>("/consultations", data, token),
+  mesConsultations: (token: string, assureId?: string) => {
+    const params = assureId ? `?assure_id=${assureId}` : "";
+    return api.get<ConsultationListResponse>(`/consultations/mes-consultations${params}`, token);
+  },
+  parAssure: (token: string, assureId: string) =>
+    api.get<ConsultationListResponse>(`/consultations/assure/${assureId}`, token),
+  getById: (token: string, id: string) =>
+    api.get<Consultation>(`/consultations/${id}`, token),
+};
+
 // ─── Feuilles de maladie ──────────────────────────────────────────────────────
 
 export const feuillesApi = {
@@ -95,6 +111,8 @@ export const feuillesApi = {
     api.post<FeuilleMaladie>("/feuilles-maladie", data, token),
   completer: (token: string, id: string, data: Partial<FeuilleMaladieCreate>) =>
     api.patch<FeuilleMaladie>(`/feuilles-maladie/${id}`, data, token),
+  telechargerPdf: (token: string, id: string, filename: string) =>
+    api.downloadFile(`/feuilles-maladie/${id}/pdf`, filename, token),
 };
 
 // ─── Prescriptions ────────────────────────────────────────────────────────────
@@ -113,6 +131,6 @@ export const remboursementsApi = {
     api.get<RemboursementListResponse>(`/remboursements/assure/${assureId}`, token),
   effectuer: (token: string, data: RemboursementCreate) =>
     api.post<Remboursement>("/remboursements", data, token),
-  telechargerFacture: (token: string, id: string) =>
-    api.downloadFile(`/remboursements/${id}/facture`, `facture-${id}.pdf`, token),
+  telechargerFacture: (token: string, id: string, filename: string) =>
+    api.downloadFile(`/remboursements/${id}/facture`, filename, token),
 };

@@ -34,14 +34,14 @@ export default function Modal({ open, onClose, title, children, size = "md" }: M
       {/* Panel */}
       <div
         className={cn(
-          "relative bg-white rounded-2xl shadow-2xl w-full animate-fade-in-up",
+          "relative bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] flex flex-col animate-fade-in-up",
           size === "sm" && "max-w-sm",
           size === "md" && "max-w-lg",
           size === "lg" && "max-w-2xl"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100 shrink-0">
           <h2 className="font-bold text-navy text-base">{title}</h2>
           <button
             onClick={onClose}
@@ -51,7 +51,7 @@ export default function Modal({ open, onClose, title, children, size = "md" }: M
           </button>
         </div>
         {/* Body */}
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-4 sm:px-6 py-5 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

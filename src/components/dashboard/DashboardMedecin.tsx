@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import {
   FileHeart, ClipboardList, Stethoscope,
-  ArrowRight, Pill, UserCheck,
+  ArrowRight, Pill, UserCheck, CalendarDays,
 } from "lucide-react";
 
 export default function DashboardMedecin() {
@@ -12,6 +12,13 @@ export default function DashboardMedecin() {
   const prenom = session?.user?.name?.split(" ")[0] ?? "Docteur";
 
   const actions = [
+    {
+      href:  "/dashboard/consultations",
+      icon:  CalendarDays,
+      label: "Enregistrer une consultation",
+      desc:  "Première étape avant feuille de maladie ou prescription",
+      color: "bg-purple-50 text-purple-600",
+    },
     {
       href:  "/dashboard/feuilles-maladie",
       icon:  FileHeart,
@@ -61,7 +68,7 @@ export default function DashboardMedecin() {
       {/* Actions rapides */}
       <div>
         <h2 className="font-bold text-navy text-sm mb-3">Actions disponibles</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {actions.map((item) => (
             <Link key={item.label} href={item.href}
               className="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-card-hover hover:border-primary/20 transition-all group">
@@ -83,6 +90,7 @@ export default function DashboardMedecin() {
         <h2 className="font-bold text-navy text-sm mb-4">Accès rapides</h2>
         <div className="space-y-2">
           {[
+            { href: "/dashboard/consultations",    icon: CalendarDays,  label: "Mes consultations" },
             { href: "/dashboard/feuilles-maladie", icon: FileHeart,    label: "Mes feuilles de maladie" },
             { href: "/dashboard/prescriptions",    icon: ClipboardList, label: "Mes prescriptions" },
           ].map((item) => (

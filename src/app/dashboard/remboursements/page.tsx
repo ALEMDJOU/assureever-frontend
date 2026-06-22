@@ -8,7 +8,7 @@ import Modal from "@/components/ui/Modal";
 import { SelectField, InputField } from "@/components/ui/FormField";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { cn } from "@/lib/utils";
-import type { RemboursementCreate, ModePaiement } from "@/types/api";
+import type { Remboursement, RemboursementCreate, ModePaiement } from "@/types/api";
 
 const STATUT_CONFIG = {
   PAYE:      { label: "Payé",       icon: CheckCircle2, color: "text-green-600 bg-green-50" },
@@ -49,8 +49,10 @@ export default function RemboursementsPage() {
     });
   };
 
-  const handleDownload = (id: string) => {
-    telecharger.mutate(id, {
+  const handleDownload = (r: Remboursement) => {
+    const date = new Date(r.date_remboursement).toISOString().split("T")[0];
+    const filename = `facture-remboursement-${date}-${r.id.slice(0, 8)}.pdf`;
+    telecharger.mutate({ id: r.id, filename }, {
       onError: (err: any) => error(err.detail ?? "Erreur lors du téléchargement"),
     });
   };
@@ -127,7 +129,8 @@ export default function RemboursementsPage() {
             <p className="font-medium">Aucun remboursement pour cet assuré</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[900px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
                 {["Date", "Taux", "Montant consultation", "Montant remboursé", "Mode paiement", "Statut", "Facture"].map((h) => (
@@ -168,7 +171,7 @@ export default function RemboursementsPage() {
                     </td>
                     <td className="px-4 py-3.5">
                       <button
-                        onClick={() => handleDownload(r.id)}
+                        onClick={() => handleDownload(r)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-text-secondary hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all"
                       >
                         <Download className="w-3.5 h-3.5" />
@@ -180,6 +183,7 @@ export default function RemboursementsPage() {
               })}
             </tbody>
           </table>
+          </div>
         )}
         {remboursements && (
           <div className="px-4 py-3 border-t border-gray-100 text-xs text-text-muted">

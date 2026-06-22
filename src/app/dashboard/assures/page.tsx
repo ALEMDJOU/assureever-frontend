@@ -147,7 +147,8 @@ export default function AssuresPage() {
             <p className="text-sm mt-1">Cliquez sur « Nouvel assuré » pour commencer.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
                 {["Assuré", "N° Assuré", "Naissance", "Téléphone", "Médecin traitant", "Actions"].map((h) => (
@@ -196,6 +197,7 @@ export default function AssuresPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
 
         {data && data.total > 20 && (
@@ -225,7 +227,7 @@ export default function AssuresPage() {
             <p className="text-xs font-semibold text-text-muted uppercase tracking-widest mb-3">
               Identité
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-semibold text-navy mb-1.5">
                   Nom <span className="text-red-500">*</span>
@@ -270,7 +272,7 @@ export default function AssuresPage() {
             <p className="text-xs font-semibold text-text-muted uppercase tracking-widest mb-3">
               Contact <span className="font-normal normal-case text-text-muted">(optionnel)</span>
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-semibold text-navy mb-1.5">
                   <Phone className="w-3.5 h-3.5 inline mr-1.5 text-text-muted" />
@@ -316,7 +318,7 @@ export default function AssuresPage() {
               <CreditCard className="w-3.5 h-3.5 inline mr-1.5 text-text-muted" />
               Mode de remboursement préféré
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {(["VIREMENT_BANCAIRE", "ESPECES", "MOBILE_MONEY"] as const).map((val) => {
                 const labels: Record<string, string> = {
                   VIREMENT_BANCAIRE: "Virement bancaire",

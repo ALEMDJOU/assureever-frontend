@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 import { ArrowLeft, Eye, EyeOff, Lock, UserCog, CheckCircle2, ArrowRight } from "lucide-react";
 import { authApi } from "@/lib/queries";
 import { ApiException } from "@/lib/api";
+import { useToast } from "@/components/ui/Toast";
 
 type Tab = "login" | "register";
 
@@ -30,6 +31,7 @@ const inputDarkError =
 
 export default function AssureurPage() {
   const router = useRouter();
+  const { error: toastError, success: toastSuccess } = useToast();
 
   const [tab,       setTab]       = useState<Tab>("login");
   const [success,   setSuccess]   = useState(false);
@@ -61,16 +63,22 @@ export default function AssureurPage() {
     return Object.keys(e).length === 0;
   };
 
-  const handleLogin = async (e: FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(""); setLoading(true);
     const res = await signIn("assureur", { email: login.email, password: login.password, redirect: false });
     setLoading(false);
-    if (res?.ok) router.push("/dashboard");
-    else setError("Identifiants incorrects ou accès non autorisé.");
+    if (res?.ok) {
+      toastSuccess("Connexion réussie. Redirection…");
+      router.push("/dashboard");
+    } else {
+      const msg = "Email ou mot de passe incorrect.";
+      setError(msg);
+      toastError(msg);
+    }
   };
 
-  const handleRegister = async (e: FormEvent) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateReg()) return;
     setLoading(true); setRegErr({});
@@ -81,10 +89,18 @@ export default function AssureurPage() {
       else router.push("/auth/assureur?registered=true");
     } catch (err) {
       if (err instanceof ApiException) {
-        if (err.status === 409) setRegErr({ email: "Un compte assureur existe déjà dans le système." });
-        else setRegErr({ global: err.detail });
+        if (err.status === 409) {
+          const msg = "Un compte assureur existe déjà dans le système.";
+          setRegErr({ email: msg });
+          toastError(msg);
+        } else {
+          setRegErr({ global: err.detail });
+          toastError(err.detail);
+        }
       } else {
-        setRegErr({ global: "Impossible de contacter le serveur. Vérifiez que le backend est démarré." });
+        const msg = "Impossible de contacter le serveur. Vérifiez que le backend est démarré.";
+        setRegErr({ global: msg });
+        toastError(msg);
       }
     } finally { setLoading(false); }
   };
@@ -121,6 +137,7 @@ export default function AssureurPage() {
                 src="/images/logo.png"
                 alt="AssureEver"
                 fill
+                sizes="48px"
                 className="object-contain drop-shadow-lg group-hover:scale-105 transition-transform duration-200"
                 priority
               />
@@ -155,7 +172,7 @@ export default function AssureurPage() {
               <button
                 key={t}
                 onClick={() => { setTab(t); setError(""); setRegErr({}); }}
-                className={`flex-1 py-3.5 text-sm font-semibold transition-all duration-200 ${
+                className={`flex-1 py-3.5 text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   tab === t
                     ? "text-primary-light border-b-2 border-primary-light bg-white/5"
                     : "text-white/40 hover:text-white/65 hover:bg-white/3"
@@ -199,14 +216,14 @@ export default function AssureurPage() {
                       className={`${inputDark} pr-11`}
                     />
                     <button type="button" onClick={() => setShowPwd(!showPwd)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors cursor-pointer">
                       {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
 
                 <button type="submit" disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-light transition-colors text-sm disabled:opacity-60 mt-1">
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-light transition-colors text-sm disabled:opacity-60 cursor-pointer mt-1">
                   {loading
                     ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Connexion…</>
                     : <>Accéder au tableau de bord <ArrowRight className="w-4 h-4" /></>}
@@ -215,7 +232,7 @@ export default function AssureurPage() {
                 <p className="text-center text-xs text-white/30 pt-1">
                   Pas encore de compte ?{" "}
                   <button type="button" onClick={() => setTab("register")}
-                    className="text-primary-light hover:text-primary transition-colors font-semibold">
+                    className="text-primary-light hover:text-primary transition-colors font-semibold cursor-pointer">
                     Créer le compte assureur
                   </button>
                 </p>
@@ -282,7 +299,7 @@ export default function AssureurPage() {
                       placeholder="8 caractères minimum" autoComplete="new-password"
                       className={`${regErr.password ? inputDarkError : inputDark} pr-11`} />
                     <button type="button" onClick={() => setShowPwd(!showPwd)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors cursor-pointer">
                       {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -311,7 +328,7 @@ export default function AssureurPage() {
                       placeholder="••••••••" autoComplete="new-password"
                       className={`${regErr.confirm ? inputDarkError : inputDark} pr-11`} />
                     <button type="button" onClick={() => setShowCfm(!showCfm)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors cursor-pointer">
                       {showCfm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -319,7 +336,7 @@ export default function AssureurPage() {
                 </div>
 
                 <button type="submit" disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-light transition-colors text-sm disabled:opacity-60 mt-1">
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-light transition-colors text-sm disabled:opacity-60 cursor-pointer mt-1">
                   {loading
                     ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Création…</>
                     : <><CheckCircle2 className="w-4 h-4" />Créer le compte assureur</>}

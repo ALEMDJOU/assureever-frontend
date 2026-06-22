@@ -1,35 +1,55 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
   LayoutDashboard, Users, Stethoscope, FileHeart,
-  ClipboardList, Banknote, Bell,
-  LogOut, Menu, X, ChevronRight,
+  ClipboardList, Banknote, Bell, CalendarDays,
+  LogOut, Menu, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/Toast";
+import { ROUTE_ROLES } from "@/lib/routeAccess";
 
 const navItems = [
-  { label: "Tableau de bord",    href: "/dashboard",                      icon: LayoutDashboard, roles: ["ASSUREUR", "MEDECIN"] },
-  { label: "Assurés",            href: "/dashboard/assures",              icon: Users,           roles: ["ASSUREUR"] },
-  { label: "Médecins",           href: "/dashboard/medecins",             icon: Stethoscope,     roles: ["ASSUREUR"] },
-  { label: "Feuilles de maladie",href: "/dashboard/feuilles-maladie",     icon: FileHeart,       roles: ["ASSUREUR", "MEDECIN"] },
-  { label: "Prescriptions",      href: "/dashboard/prescriptions",        icon: ClipboardList,   roles: ["MEDECIN"] },
-  { label: "Remboursements",     href: "/dashboard/remboursements",       icon: Banknote,        roles: ["ASSUREUR"] },
+  { label: "Tableau de bord",    href: "/dashboard",                      icon: LayoutDashboard, roles: ROUTE_ROLES["/dashboard"] },
+  { label: "Assurés",            href: "/dashboard/assures",              icon: Users,           roles: ROUTE_ROLES["/dashboard/assures"] },
+  { label: "Médecins",           href: "/dashboard/medecins",             icon: Stethoscope,     roles: ROUTE_ROLES["/dashboard/medecins"] },
+  { label: "Mes consultations",  href: "/dashboard/consultations",        icon: CalendarDays,    roles: ROUTE_ROLES["/dashboard/consultations"] },
+  { label: "Feuilles de maladie",href: "/dashboard/feuilles-maladie",     icon: FileHeart,       roles: ROUTE_ROLES["/dashboard/feuilles-maladie"] },
+  { label: "Prescriptions",      href: "/dashboard/prescriptions",        icon: ClipboardList,   roles: ROUTE_ROLES["/dashboard/prescriptions"] },
+  { label: "Remboursements",     href: "/dashboard/remboursements",       icon: Banknote,        roles: ROUTE_ROLES["/dashboard/remboursements"] },
 ];
+
+const ERROR_MESSAGES: Record<string, string> = {
+  forbidden: "Vous n'avez pas accès à cette page.",
+};
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const pathname  = usePathname();
+  const pathname     = usePathname();
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+  const { error: toastError } = useToast();
   const { data: session } = useSession();
   const role      = (session?.user as any)?.role as string | undefined;
   const userName  = session?.user?.name ?? "Utilisateur";
   const userEmail = session?.user?.email ?? "";
 
-  const visibleNav = navItems.filter((item) => !role || item.roles.includes(role));
+  const visibleNav = navItems.filter((item) => !role || item.roles.includes(role as any));
+
+  useEffect(() => {
+    const errorCode = searchParams.get("error");
+    if (!errorCode) return;
+    toastError(ERROR_MESSAGES[errorCode] ?? "Accès refusé.");
+    const params = new URLSearchParams(searchParams);
+    params.delete("error");
+    router.replace(params.size ? `${pathname}?${params}` : pathname);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const Sidebar = (
     <aside className="flex flex-col h-full bg-white border-r border-gray-100 w-56 shrink-0">
@@ -41,6 +61,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               src="/images/logo.png"
               alt="AssureEver"
               fill
+              sizes="32px"
               className="object-contain group-hover:scale-105 transition-transform duration-200"
             />
           </div>

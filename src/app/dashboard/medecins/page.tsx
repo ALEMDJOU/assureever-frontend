@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Stethoscope, Plus, Search, UserX, Badge } from "lucide-react";
+import { Stethoscope, Plus, Search, UserX, Eye, EyeOff } from "lucide-react";
 import { useMedecins, useCreerMedecin, useDesactiverMedecin } from "@/hooks/useApi";
 import { useToast } from "@/components/ui/Toast";
 import Modal from "@/components/ui/Modal";
@@ -23,6 +23,7 @@ export default function MedecinsPage() {
   const [modalOpen,  setModalOpen]  = useState(false);
   const [form,       setForm]       = useState<MedecinCreate>(EMPTY);
   const [errors,     setErrors]     = useState<Partial<MedecinCreate>>({});
+  const [showPwd,    setShowPwd]    = useState(false);
 
   const { data, isLoading } = useMedecins(filtre || undefined, recherche);
   const creer     = useCreerMedecin();
@@ -120,7 +121,8 @@ export default function MedecinsPage() {
             <p className="text-sm mt-1">Enregistrez le premier médecin.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
                 {["Médecin", "Matricule", "Type", "Spécialité", "Téléphone", "Actions"].map((h) => (
@@ -170,6 +172,7 @@ export default function MedecinsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
         {data && (
           <div className="px-4 py-3 border-t border-gray-100 text-xs text-text-muted">
@@ -180,7 +183,7 @@ export default function MedecinsPage() {
 
       {/* Modal création */}
       <Modal open={modalOpen} onClose={() => { setModalOpen(false); setErrors({}); setForm(EMPTY); }} title="Enregistrer un médecin" size="lg">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <InputField label="Nom" required value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} error={errors.nom} placeholder="Dupont" />
           <InputField label="Prénom" required value={form.prenom} onChange={(e) => setForm({ ...form, prenom: e.target.value })} error={errors.prenom} placeholder="Jean" />
           <InputField label="Matricule" required value={form.matricule} onChange={(e) => setForm({ ...form, matricule: e.target.value })} error={errors.matricule} placeholder="MED-2024-001" />
@@ -189,11 +192,37 @@ export default function MedecinsPage() {
             <option value="SPECIALISTE">Spécialiste</option>
           </SelectField>
           {form.type_medecin === "SPECIALISTE" && (
-            <InputField label="Spécialité" required value={form.specialite ?? ""} onChange={(e) => setForm({ ...form, specialite: e.target.value })} error={errors.specialite} placeholder="Cardiologie" className="col-span-2" />
+            <InputField label="Spécialité" required value={form.specialite ?? ""} onChange={(e) => setForm({ ...form, specialite: e.target.value })} error={errors.specialite} placeholder="Cardiologie" className="sm:col-span-2" />
           )}
           <InputField label="Téléphone" value={form.telephone ?? ""} onChange={(e) => setForm({ ...form, telephone: e.target.value })} placeholder="+237 6XX XXX XXX" />
           <InputField label="Email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} error={errors.email} placeholder="medecin@clinique.cm" />
-          <InputField label="Mot de passe" type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} error={errors.password} placeholder="8 caractères minimum" className="col-span-2" />
+          <div className="sm:col-span-2 flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-navy">
+              Mot de passe<span className="text-red-500 ml-0.5">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showPwd ? "text" : "password"}
+                required
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                placeholder="8 caractères minimum"
+                className={cn(
+                  "w-full px-4 py-2.5 pr-11 rounded-xl border text-sm text-navy placeholder-gray-400",
+                  "focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary transition-colors",
+                  errors.password ? "border-red-400 bg-red-50/30" : "border-gray-200 bg-white hover:border-gray-300"
+                )}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((v) => !v)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
+              >
+                {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+          </div>
         </div>
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
           <button onClick={() => setModalOpen(false)} className="btn-outline text-sm px-5 py-2.5">Annuler</button>

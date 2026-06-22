@@ -24,7 +24,7 @@
 @layer components {
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-primary text-white font-semibold
-           px-6 py-3 rounded-xl
+           px-6 py-3 rounded-xl cursor-pointer
            hover:bg-primary-light transition-all duration-200
            shadow-sm hover:shadow-md hover:-translate-y-px
            focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2
@@ -33,7 +33,7 @@
 
   .btn-outline {
     @apply inline-flex items-center gap-2 border-2 border-primary text-primary font-semibold
-           px-6 py-3 rounded-xl
+           px-6 py-3 rounded-xl cursor-pointer
            hover:bg-surface transition-all duration-200
            focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2;
   }

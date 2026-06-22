@@ -69,6 +69,34 @@ export interface MedecinListResponse {
   items: Medecin[];
 }
 
+// ─── Consultations ────────────────────────────────────────────────────────────
+
+export interface Consultation {
+  id: string;
+  assure_id: string;
+  medecin_id: string;
+  date_consultation: string;
+  motif: string;
+  diagnostic: string | null;
+  actes_realises: string | null;
+  montant_consultation: number;
+  created_at: string;
+}
+
+export interface ConsultationCreate {
+  assure_id: string;
+  date_consultation: string;
+  motif: string;
+  diagnostic?: string;
+  actes_realises?: string;
+  montant_consultation: number;
+}
+
+export interface ConsultationListResponse {
+  total: number;
+  items: Consultation[];
+}
+
 // ─── Feuilles de maladie ──────────────────────────────────────────────────────
 
 export interface FeuilleMaladie {

@@ -52,6 +52,7 @@ export default function Navbar() {
                 src="/images/logo.png"
                 alt="AssureEver logo"
                 fill
+                sizes="40px"
                 className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-200"
                 priority
               />

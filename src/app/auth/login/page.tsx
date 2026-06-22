@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { ArrowLeft, Eye, EyeOff, CheckCircle2, Stethoscope } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function LoginMedecinPage() {
   const router       = useRouter();
   const searchParams = useSearchParams();
+  const { error: toastError } = useToast();
 
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
@@ -22,16 +24,25 @@ export default function LoginMedecinPage() {
     if (searchParams.get("registered") === "true") {
       setInfo("Compte créé avec succès. Connectez-vous pour accéder au tableau de bord.");
     }
+    if (searchParams.get("error") === "unauthenticated") {
+      toastError("Veuillez vous connecter pour accéder à cette page.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     const res = await signIn("medecin", { email, password, redirect: false });
     setLoading(false);
-    if (res?.ok) router.push("/dashboard");
-    else setError("Email ou mot de passe incorrect, ou vous n'êtes pas enregistré comme médecin.");
+    if (res?.ok) {
+      router.push("/dashboard");
+    } else {
+      const msg = "Email ou mot de passe incorrect, ou vous n'êtes pas enregistré comme médecin.";
+      setError(msg);
+      toastError(msg);
+    }
   };
 
   return (
@@ -50,6 +61,7 @@ export default function LoginMedecinPage() {
                 src="/images/logo.png"
                 alt="AssureEver"
                 fill
+                sizes="48px"
                 className="object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-200"
                 priority
               />
@@ -125,7 +137,7 @@ export default function LoginMedecinPage() {
                   />
                   <button
                     type="button" onClick={() => setShowPwd(!showPwd)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-primary transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-primary transition-colors cursor-pointer"
                   >
                     {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>

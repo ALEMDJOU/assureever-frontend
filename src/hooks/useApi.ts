@@ -2,9 +2,10 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { assuresApi, medecinsApi, feuillesApi, remboursementsApi, prescriptionsApi } from "@/lib/queries";
-import type { AssureCreate, MedecinCreate, FeuilleMaladieCreate,
-  RemboursementCreate, PrescriptionMedicamentCreate, PrescriptionConsultationCreate,
+import { assuresApi, medecinsApi, consultationsApi, feuillesApi, remboursementsApi, prescriptionsApi } from "@/lib/queries";
+import type { AssureCreate, MedecinCreate, ConsultationCreate,
+  FeuilleMaladieCreate, RemboursementCreate,
+  PrescriptionMedicamentCreate, PrescriptionConsultationCreate,
   TypeMedecin } from "@/types/api";
 
 function useToken(): string {
@@ -105,6 +106,37 @@ export function useDesactiverMedecin() {
   });
 }
 
+// ─── Consultations ────────────────────────────────────────────────────────────
+
+export function useMesConsultations(assureId?: string) {
+  const token = useToken();
+  return useQuery({
+    queryKey: ["consultations", "mes", assureId],
+    queryFn: () => consultationsApi.mesConsultations(token, assureId),
+    enabled: !!token,
+    staleTime: 30_000,
+  });
+}
+
+export function useConsultationsAssure(assureId: string) {
+  const token = useToken();
+  return useQuery({
+    queryKey: ["consultations", "assure", assureId],
+    queryFn: () => consultationsApi.parAssure(token, assureId),
+    enabled: !!token && !!assureId,
+    staleTime: 30_000,
+  });
+}
+
+export function useCreerConsultation() {
+  const token = useToken();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ConsultationCreate) => consultationsApi.creer(token, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["consultations"] }),
+  });
+}
+
 // ─── Feuilles de maladie ──────────────────────────────────────────────────────
 
 export function useFeuillesAssure(assureId: string) {
@@ -144,6 +176,14 @@ export function useCompleterFeuille() {
   });
 }
 
+export function useTelechargerFeuillePdf() {
+  const token = useToken();
+  return useMutation({
+    mutationFn: ({ id, filename }: { id: string; filename: string }) =>
+      feuillesApi.telechargerPdf(token, id, filename),
+  });
+}
+
 // ─── Remboursements ───────────────────────────────────────────────────────────
 
 export function useRemboursements(assureId: string) {
@@ -170,7 +210,8 @@ export function useEffectuerRemboursement() {
 export function useTelechargerFacture() {
   const token = useToken();
   return useMutation({
-    mutationFn: (id: string) => remboursementsApi.telechargerFacture(token, id),
+    mutationFn: ({ id, filename }: { id: string; filename: string }) =>
+      remboursementsApi.telechargerFacture(token, id, filename),
   });
 }
 
