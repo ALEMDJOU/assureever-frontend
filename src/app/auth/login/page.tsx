@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,6 +9,14 @@ import { ArrowLeft, Eye, EyeOff, CheckCircle2, Stethoscope } from "lucide-react"
 import { useToast } from "@/components/ui/Toast";
 
 export default function LoginMedecinPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginMedecinForm />
+    </Suspense>
+  );
+}
+
+function LoginMedecinForm() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const { error: toastError } = useToast();

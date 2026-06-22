@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode, useEffect } from "react";
+import { useState, ReactNode, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -28,18 +28,11 @@ const ERROR_MESSAGES: Record<string, string> = {
   forbidden: "Vous n'avez pas accès à cette page.",
 };
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+function ErrorToastHandler() {
   const pathname     = usePathname();
   const router       = useRouter();
   const searchParams = useSearchParams();
   const { error: toastError } = useToast();
-  const { data: session } = useSession();
-  const role      = (session?.user as any)?.role as string | undefined;
-  const userName  = session?.user?.name ?? "Utilisateur";
-  const userEmail = session?.user?.email ?? "";
-
-  const visibleNav = navItems.filter((item) => !role || item.roles.includes(role as any));
 
   useEffect(() => {
     const errorCode = searchParams.get("error");
@@ -50,6 +43,19 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     router.replace(params.size ? `${pathname}?${params}` : pathname);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
+  return null;
+}
+
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname  = usePathname();
+  const { data: session } = useSession();
+  const role      = (session?.user as any)?.role as string | undefined;
+  const userName  = session?.user?.name ?? "Utilisateur";
+  const userEmail = session?.user?.email ?? "";
+
+  const visibleNav = navItems.filter((item) => !role || item.roles.includes(role as any));
 
   const Sidebar = (
     <aside className="flex flex-col h-full bg-white border-r border-gray-100 w-56 shrink-0">
@@ -126,6 +132,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
+      <Suspense fallback={null}>
+        <ErrorToastHandler />
+      </Suspense>
+
       {/* Sidebar desktop */}
       <div className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40">
         {Sidebar}
