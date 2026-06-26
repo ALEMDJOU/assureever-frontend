@@ -12,7 +12,6 @@ const footerLinks = {
   "Accès rapide": [
     { label: "Espace médecin",    href: "/auth/login" },
     { label: "Espace assureur",   href: "/auth/assureur" },
-    { label: "Créer un compte",   href: "/auth/assureur" },
     { label: "Documentation",     href: "#" },
   ],
   Légal: [

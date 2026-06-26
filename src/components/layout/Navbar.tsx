@@ -140,14 +140,6 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-
-            {/* CTA */}
-            <Link
-              href="/auth/assureur"
-              className="inline-flex items-center gap-2 bg-primary text-white text-[13px] font-semibold px-4 py-2.5 rounded-xl hover:bg-primary-light transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              Demander un accès
-            </Link>
           </div>
 
           {/* ── Burger mobile ── */}
@@ -194,10 +186,6 @@ export default function Navbar() {
                   <span className="text-primary text-xs font-bold">A</span>
                 </div>
                 <span className="text-sm font-semibold text-navy">Espace assureur</span>
-              </Link>
-              <Link href="/auth/assureur" onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 bg-primary text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-primary-light transition-colors">
-                Demander un accès
               </Link>
             </div>
           </div>

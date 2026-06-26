@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, UserPlus } from "lucide-react";
+import { ArrowRight, UserCog } from "lucide-react";
 
 export default function CTA() {
   return (
@@ -27,14 +27,14 @@ export default function CTA() {
                 href="/auth/assureur"
                 className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-primary-light transition-colors shadow-lg shadow-primary/30"
               >
-                <UserPlus className="w-5 h-5" />
-                Demander un accès
+                <UserCog className="w-5 h-5" />
+                Espace assureur
               </Link>
               <Link
                 href="/auth/login"
                 className="inline-flex items-center gap-2 border-2 border-white/30 text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-white/10 hover:border-white/50 transition-colors"
               >
-                Se connecter
+                Espace médecin
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
