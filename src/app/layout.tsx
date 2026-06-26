@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     description: "Plateforme digitale de gestion de la sécurité sociale.",
     siteName: "AssureEver",
   },
+  icons: {
+    icon: "/images/logo.png",
+    shortcut: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({
