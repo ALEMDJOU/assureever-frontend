@@ -50,6 +50,7 @@ export interface Medecin {
   specialite: string | null;
   telephone: string | null;
   email: string | null;
+  is_active: boolean;
   created_at: string;
 }
 

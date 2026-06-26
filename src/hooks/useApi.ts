@@ -106,6 +106,15 @@ export function useDesactiverMedecin() {
   });
 }
 
+export function useReactiverMedecin() {
+  const token = useToken();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => medecinsApi.reactiver(token, id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["medecins"] }),
+  });
+}
+
 // ─── Consultations ────────────────────────────────────────────────────────────
 
 export function useMesConsultations(assureId?: string) {

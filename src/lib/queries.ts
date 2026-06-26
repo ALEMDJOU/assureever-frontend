@@ -83,6 +83,8 @@ export const medecinsApi = {
     api.get<Medecin>(`/medecins/${id}`, token),
   desactiver: (token: string, id: string) =>
     api.delete<{ message: string }>(`/medecins/${id}`, token),
+  reactiver: (token: string, id: string) =>
+    api.post<{ message: string }>(`/medecins/${id}/reactiver`, null, token),
 };
 
 // ─── Consultations ────────────────────────────────────────────────────────────

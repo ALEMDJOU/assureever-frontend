@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Stethoscope, Plus, Search, UserX, Eye, EyeOff } from "lucide-react";
-import { useMedecins, useCreerMedecin, useDesactiverMedecin } from "@/hooks/useApi";
+import { Stethoscope, Plus, Search, UserX, UserCheck, Eye, EyeOff } from "lucide-react";
+import { useMedecins, useCreerMedecin, useDesactiverMedecin, useReactiverMedecin } from "@/hooks/useApi";
 import { useToast } from "@/components/ui/Toast";
 import Modal from "@/components/ui/Modal";
 import { InputField, SelectField } from "@/components/ui/FormField";
@@ -26,8 +26,9 @@ export default function MedecinsPage() {
   const [showPwd,    setShowPwd]    = useState(false);
 
   const { data, isLoading } = useMedecins(filtre || undefined, recherche);
-  const creer     = useCreerMedecin();
+  const creer      = useCreerMedecin();
   const desactiver = useDesactiverMedecin();
+  const reactiver  = useReactiverMedecin();
   const { success, error } = useToast();
 
   const validate = (): boolean => {
@@ -60,6 +61,14 @@ export default function MedecinsPage() {
     if (!confirm(`Désactiver le compte du Dr. ${nom} ?`)) return;
     desactiver.mutate(id, {
       onSuccess: () => success("Compte désactivé"),
+      onError:   (err: any) => error(err.detail ?? "Erreur"),
+    });
+  };
+
+  const handleReactiver = (id: string, nom: string) => {
+    if (!confirm(`Réactiver le compte du Dr. ${nom} ?`)) return;
+    reactiver.mutate(id, {
+      onSuccess: () => success("Compte réactivé"),
       onError:   (err: any) => error(err.detail ?? "Erreur"),
     });
   };
@@ -125,7 +134,7 @@ export default function MedecinsPage() {
           <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
-                {["Médecin", "Matricule", "Type", "Spécialité", "Téléphone", "Actions"].map((h) => (
+                {["Médecin", "Matricule", "Type", "Spécialité", "Téléphone", "Statut", "Actions"].map((h) => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wide">
                     {h}
                   </th>
@@ -160,13 +169,33 @@ export default function MedecinsPage() {
                   <td className="px-4 py-3.5 text-text-secondary">{m.specialite ?? "—"}</td>
                   <td className="px-4 py-3.5 text-text-secondary">{m.telephone ?? "—"}</td>
                   <td className="px-4 py-3.5">
-                    <button
-                      onClick={() => handleDesactiver(m.id, `${m.prenom} ${m.nom}`)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-500 transition-colors"
-                      title="Désactiver"
-                    >
-                      <UserX className="w-4 h-4" />
-                    </button>
+                    <span className={cn(
+                      "inline-block px-2.5 py-1 rounded-full text-xs font-semibold",
+                      m.is_active
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    )}>
+                      {m.is_active ? "Actif" : "Désactivé"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5">
+                    {m.is_active ? (
+                      <button
+                        onClick={() => handleDesactiver(m.id, `${m.prenom} ${m.nom}`)}
+                        className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-500 transition-colors"
+                        title="Désactiver"
+                      >
+                        <UserX className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleReactiver(m.id, `${m.prenom} ${m.nom}`)}
+                        className="p-1.5 rounded-lg hover:bg-green-50 text-text-muted hover:text-green-600 transition-colors"
+                        title="Réactiver"
+                      >
+                        <UserCheck className="w-4 h-4" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
